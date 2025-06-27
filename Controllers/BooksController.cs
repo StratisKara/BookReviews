@@ -1,6 +1,7 @@
 ﻿using BookReviews.Database;
 using BookReviews.Interfaces;
 using BookReviews.Models;
+using BookReviews.Models;
 using BookReviews.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,12 +30,41 @@ namespace BookReviews.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? genre, int? year, string? author)
         {
-            return View(await _context.Books.ToListAsync());
+            var booksQuery = _context.Books.Include(b => b.Reviews).AsQueryable();
+
+            if (!string.IsNullOrEmpty(genre))
+                booksQuery = booksQuery.Where(b => b.Genre == genre);
+
+            if (year.HasValue)
+                booksQuery = booksQuery.Where(b => b.PublishedYear == year.Value);
+
+            if (!string.IsNullOrEmpty(author))
+                booksQuery = booksQuery.Where(b => b.Author.Contains(author));
+
+            var books = await booksQuery.ToListAsync();
+
+            var genres = await _context.Books.Select(b => b.Genre).Distinct().ToListAsync();
+            var years = await _context.Books.Select(b => b.PublishedYear).Distinct().OrderByDescending(y => y).ToListAsync();
+            var authors = await _context.Books.Select(b => b.Author).Distinct().ToListAsync();
+
+            var vm = new BookListViewModel
+            {
+                Books = books,
+                Genres = genres,
+                Years = years,
+                Authors = authors,
+                SelectedGenre = genre,
+                SelectedYear = year,
+                SelectedAuthor = author
+            };
+
+            return View(vm);
         }
 
-        // GET: Books/Details/5
+
+
         // GET: Books/Details/5
         [HttpGet]
         public async Task<IActionResult> Details(int id)
@@ -61,8 +91,6 @@ namespace BookReviews.Controllers
         }
 
         // POST: Books/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Author,PublishedYear,Genre")] Book book)
@@ -163,21 +191,11 @@ namespace BookReviews.Controllers
                 if (!User.Identity.IsAuthenticated)
                     return RedirectToAction("Login", "Account");
 
-                // Re-fetch the book to repopulate full details
                 vm.Book = await _bookService.GetBookDetailsAsync(vm.Book.Id)
                     ?? throw new InvalidOperationException("Book not found");
 
                 if (!ModelState.IsValid)
                 {
-                    // Optional: log errors for debugging
-                    //foreach (var kvp in ModelState)
-                    //{
-                    //    foreach (var error in kvp.Value.Errors)
-                    //    {
-                    //        Console.WriteLine($"Field: {kvp.Key}, Error: {error.ErrorMessage}");
-                    //    }
-                    //}
-
                     vm.Reviews = await _reviewRepo.GetByBookIdAsync(vm.Book.Id);
                     return View(vm);
                 }
@@ -198,7 +216,6 @@ namespace BookReviews.Controllers
             }
             catch (Exception ex)
             {
-                // Log the error (you can also use a real logger like ILogger)
                 Console.WriteLine($"Error in Details POST: {ex.Message}");
 
                 ModelState.AddModelError("", "An unexpected error occurred while submitting your review.");

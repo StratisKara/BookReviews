@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\strat\\source\\repos\\BookReviews\\BookReviews.csproj": {}
+    "C:\\Users\\EIK\\source\\repos\\BookReviews\\BookReviews.csproj": {}
   },
   "projects": {
-    "C:\\Users\\strat\\source\\repos\\BookReviews\\BookReviews.csproj": {
+    "C:\\Users\\EIK\\source\\repos\\BookReviews\\BookReviews.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\strat\\source\\repos\\BookReviews\\BookReviews.csproj",
+        "projectUniqueName": "C:\\Users\\EIK\\source\\repos\\BookReviews\\BookReviews.csproj",
         "projectName": "BookReviews",
-        "projectPath": "C:\\Users\\strat\\source\\repos\\BookReviews\\BookReviews.csproj",
-        "packagesPath": "C:\\Users\\strat\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\strat\\source\\repos\\BookReviews\\obj\\",
+        "projectPath": "C:\\Users\\EIK\\source\\repos\\BookReviews\\BookReviews.csproj",
+        "packagesPath": "C:\\Users\\EIK\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\EIK\\source\\repos\\BookReviews\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\strat\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\EIK\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/qubiteqgr/_packaging/Qubiteq.Library/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
@@ -89,6 +90,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[9.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[9.0.1, )"
             },
             "Swashbuckle.AspNetCore.SwaggerUI": {
               "target": "Package",

@@ -1,5 +1,4 @@
-﻿// Data/DesignTimeDbContextFactory.cs
-using BookReviews.Database;
+﻿using BookReviews.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

@@ -17,7 +17,6 @@ namespace BookReviews.Models
 
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
-        // Foreign Keys
         public int BookId { get; set; }
         public Book? Book { get; set; }
 

@@ -26,14 +26,12 @@ namespace BookReviews.Services
 
             try
             {
-                // Business rule: 1 review per user per book
                 var hasReviewed = await _reviewRepo.UserHasReviewedBookAsync(userId, review.BookId);
                 if (hasReviewed)
                 {
                     return new ReviewSubmissionResult(false, null, "You've already reviewed this book");
                 }
 
-                // Business rule: Validate rating
                 if (review.Rating < 1 || review.Rating > 5)
                 {
                     return new ReviewSubmissionResult(false, null, "Rating must be between 1-5");
@@ -47,7 +45,6 @@ namespace BookReviews.Services
             }
             catch (Exception ex)
             {
-                // Log error here
                 return new ReviewSubmissionResult(false, null, ex.Message);
             }
         }
@@ -68,7 +65,6 @@ namespace BookReviews.Services
             }
             catch (Exception ex)
             {
-                // Log error here
                 return new VoteResult(false, null, ex.Message);
             }
         }

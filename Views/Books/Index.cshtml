@@ -1,24 +1,74 @@
-﻿@model IEnumerable<Book>
+﻿@model BookReviews.Models.BookListViewModel
+
+@{
+    ViewData["Title"] = "Book List";
+}
 
 <h1>Book List</h1>
 
-<table class="table">
+<form asp-action="Index" method="get" class="mb-4">
+    <div class="row">
+        <div class="col-md-3">
+            <label for="genre">Filter by Genre:</label>
+            <select name="genre" class="form-select">
+                <option value="">-- All Genres --</option>
+                @foreach (var genre in Model.Genres)
+                {
+                    <option value="@genre" selected="@(genre == Model.SelectedGenre)">@genre</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="year">Filter by Year:</label>
+            <select name="year" class="form-select">
+                <option value="">-- All Years --</option>
+                @foreach (var year in Model.Years)
+                {
+                    <option value="@year" selected="@(year == Model.SelectedYear)">@year</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="author">Filter by Author:</label>
+            <select name="author" class="form-select">
+                <option value="">-- All Authors --</option>
+                @foreach (var author in Model.Authors)
+                {
+                    <option value="@author" selected="@(author == Model.SelectedAuthor)">@author</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a asp-action="Index" class="btn btn-secondary">Reset</a>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Title</th>
             <th>Author</th>
+            <th>Published</th>
+            <th>Genre</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var book in Model.Books)
         {
             <tr>
-                <td>@item.Title</td>
-                <td>@item.Author</td>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.PublishedYear</td>
+                <td>@book.Genre</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a asp-action="Details" asp-route-id="@book.Id">Details</a> |
+                    <a asp-action="Edit" asp-route-id="@book.Id">Edit</a>
                 </td>
             </tr>
         }

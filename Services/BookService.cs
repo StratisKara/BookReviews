@@ -38,7 +38,6 @@ namespace BookReviews.Services
         {
             try
             {
-                // Business rule: Prevent duplicate titles
                 var existingBooks = await _bookRepo.GetAllAsync();
                 if (existingBooks.Any(b =>
                     b.Title != null && b.Title.Equals(book.Title, StringComparison.OrdinalIgnoreCase) &&
@@ -53,7 +52,6 @@ namespace BookReviews.Services
             }
             catch (Exception ex)
             {
-                // Log error here
                 return new BookCreationResult(false, null, ex.Message);
             }
         }
@@ -63,7 +61,6 @@ namespace BookReviews.Services
             var book = await _bookRepo.GetByIdAsync(id);
             if (book == null) return false;
 
-            // Business rule: Only allow deletion if no reviews exist
             var hasReviews = await _reviewRepo.GetByBookIdAsync(id);
             if (hasReviews.Any()) return false;
 

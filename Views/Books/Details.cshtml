@@ -21,6 +21,14 @@
 <hr />
 
 <h2>Reviews</h2>
+
+@if (TempData["VoteError"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["VoteError"]
+    </div>
+}
+
 @if (!Model.Reviews.Any())
 {
     <p>No reviews yet. Be the first to post!</p>
@@ -34,6 +42,27 @@ else
                 <strong>@r.User?.UserName</strong> rated it <strong>@r.Rating</strong>
                 <p>@r.Content</p>
                 <small class="text-muted">@r.DateCreated.ToLocalTime():g</small>
+
+                <p>
+                    Votes: @(r.Votes?.Count(v => v.IsUpvote) - r.Votes?.Count(v => !v.IsUpvote) ?? 0)
+                </p>
+
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <form asp-controller="Reviews" asp-action="Vote" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="reviewId" value="@r.Id" />
+                        <input type="hidden" name="isUpvote" value="true" />
+                        <button type="submit" class="btn btn-sm btn-success">👍 Upvote</button>
+                    </form>
+
+                    <form asp-controller="Reviews" asp-action="Vote" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="reviewId" value="@r.Id" />
+                        <input type="hidden" name="isUpvote" value="false" />
+                        <button type="submit" class="btn btn-sm btn-danger">👎 Downvote</button>
+                    </form>
+                }
             </div>
         </div>
     }
@@ -45,13 +74,13 @@ else
 {
     <h3>Add Your Review</h3>
 
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
     <form asp-action="Details" method="post">
         @Html.AntiForgeryToken()
 
-        <!-- Include only the fields required by [Bind] -->
         <input type="hidden" name="Book.Id" value="@Model.Book.Id" />
         <input type="hidden" name="Book.Title" value="@Model.Book.Title" />
-
 
         <div class="mb-3">
             <label asp-for="InputReview.Content" class="form-label">Review</label>
@@ -86,4 +115,3 @@ else
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-

@@ -39,10 +39,8 @@ namespace BookReviews.Repositories
             }
             catch (Exception ex)
             {
-                // Log the exception (consider using ILogger)
                 Console.WriteLine($"Error retrieving reviews: {ex.Message}");
 
-                // Return an empty list or handle accordingly
                 return new List<Review>();
             }
         }
@@ -76,23 +74,34 @@ namespace BookReviews.Repositories
 
         public async Task<bool> AddVoteAsync(int reviewId, string userId, bool isUpvote)
         {
-            // Check for existing vote
             var existingVote = await _context.ReviewVotes
                 .FirstOrDefaultAsync(v => v.ReviewId == reviewId && v.UserId == userId);
 
-            if (existingVote != null) return false;
-
-            var vote = new ReviewVote
+            if (existingVote != null)
             {
-                ReviewId = reviewId,
-                UserId = userId,
-                IsUpvote = isUpvote
-            };
+                if (existingVote.IsUpvote == isUpvote)
+                {
+                    return false;
+                }
 
-            await _context.ReviewVotes.AddAsync(vote);
+                existingVote.IsUpvote = isUpvote;
+                _context.ReviewVotes.Update(existingVote);
+            }
+            else
+            {
+                var vote = new ReviewVote
+                {
+                    ReviewId = reviewId,
+                    UserId = userId,
+                    IsUpvote = isUpvote
+                };
+                await _context.ReviewVotes.AddAsync(vote);
+            }
+
             await _context.SaveChangesAsync();
             return true;
         }
+
 
         public async Task<bool> RemoveVoteAsync(int reviewId, string userId)
         {

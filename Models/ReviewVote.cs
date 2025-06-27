@@ -7,7 +7,6 @@ namespace BookReviews.Models
         public int Id { get; set; }
         public bool IsUpvote { get; set; }
 
-        // Relationships
         public int ReviewId { get; set; }
         public Review? Review { get; set; }
 

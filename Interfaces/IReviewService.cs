@@ -9,7 +9,6 @@ namespace BookReviews.Interfaces
         Task<VoteResult> ProcessVoteAsync(int reviewId, string userId, bool isUpvote);
         Task<bool> DeleteReviewAsync(int reviewId, string userId);
         Task<bool> UserHasReviewedBookAsync(string userId, int bookId);
-        //Task<>
     }
 
     public record ReviewSubmissionResult(bool Success, Review? Review, string? ErrorMessage);
