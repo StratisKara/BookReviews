@@ -1,0 +1,53 @@
+﻿@using System.Security.Claims
+@model Book
+
+<!-- Existing book details code -->
+
+<h3 class="mt-4">Reviews</h3>
+
+@if (Model.Reviews.Any())
+{
+    <div class="reviews">
+        @foreach (var review in Model.Reviews.OrderByDescending(r => r.DateCreated))
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5>@review.User.UserName</h5>
+                        <div class="text-warning">
+                            @for (int i = 0; i < review.Rating; i++)
+                            {
+                                <i class="bi bi-star-fill"></i>
+                            }
+                        </div>
+                    </div>
+                    <p class="text-muted small">@review.DateCreated.ToShortDateString()</p>
+                    <p>@review.Content</p>
+
+                    @if (review.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                    {
+                        <form asp-action="Delete" asp-controller="Reviews" method="post">
+                            <input type="hidden" name="id" value="@review.Id" />
+                            <input type="hidden" name="bookId" value="@Model.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No reviews yet. Be the first to review!</p>
+}
+
+@if (ViewBag.CanReview == true)
+{
+    <a asp-action="Create" asp-controller="Reviews"
+       asp-route-bookId="@Model.Id" class="btn btn-primary">
+        <i class="bi bi-pencil"></i> Add Review
+    </a>
+}
